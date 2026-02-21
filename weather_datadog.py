@@ -74,32 +74,36 @@ def get_weather_data(zip_code: str, api_key: str) -> Optional[dict]:
         return None
 
 
-def submit_datadog_metrics(temperature: float, humidity: float, api_key: str, app_key: str):
+def submit_datadog_metrics(temperature: float, humidity: float, zip_code: str, api_key: str, app_key: str):
     """
     Submit temperature and humidity as custom metrics to Datadog.
     
     Args:
         temperature: Temperature value in Fahrenheit
         humidity: Humidity percentage
+        zip_code: ZIP code (sent as Datadog tag "location")
         api_key: Datadog API key
         app_key: Datadog Application key
     """
+    tags = [f"location:{zip_code}"]
     try:
         # Submit temperature metric
         api.Metric.send(
             metric='environment.temperature.outside',
             points=[(int(time.time()), temperature)],
-            type='gauge'
+            type='gauge',
+            tags=tags
         )
-        logger.info(f"Submitted metric: environment.temperature.outside = {temperature}°F")
+        logger.info(f"Submitted metric: environment.temperature.outside = {temperature}°F (location={zip_code})")
         
         # Submit humidity metric
         api.Metric.send(
             metric='environment.humidity.outside',
             points=[(int(time.time()), humidity)],
-            type='gauge'
+            type='gauge',
+            tags=tags
         )
-        logger.info(f"Submitted metric: environment.humidity.outside = {humidity}%")
+        logger.info(f"Submitted metric: environment.humidity.outside = {humidity}% (location={zip_code})")
         
     except Exception as e:
         logger.error(f"Error submitting metrics to Datadog: {e}")
@@ -155,6 +159,7 @@ def main():
             submit_datadog_metrics(
                 weather_data["temperature"],
                 weather_data["humidity"],
+                zip_code,
                 datadog_api_key,
                 datadog_app_key
             )
