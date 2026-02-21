@@ -1,0 +1,12 @@
+[Unit]
+Description=Weather to Datadog Metric
+After=network.target
+
+[Service]
+ExecStart=/bin/bash /home/mike/weather-datadog/run.sh
+WorkingDirectory=/home/mike/weather-datadog
+Restart=always
+User=mike
+
+[Install]
+WantedBy=multi-user.target
