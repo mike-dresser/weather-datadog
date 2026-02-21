@@ -49,7 +49,7 @@ def get_weather_data(zip_code: str, api_key: str) -> Optional[dict]:
     params = {
         "zip": zip_code,
         "appid": api_key,
-        "units": "imperial"  # Use Fahrenheit for temperature
+        "units": "metric"  # Use Celsius for temperature
     }
     
     try:
@@ -161,10 +161,10 @@ def main():
         else:
             logger.warning("Skipping metric submission due to weather data fetch failure")
         
-        # Wait 15 seconds before next iteration (unless shutdown requested)
+        # Wait 300 seconds before next iteration (unless shutdown requested)
         if not shutdown_flag:
             logger.info("Waiting 15 seconds until next check...")
-            for _ in range(15):
+            for _ in range(300):
                 if shutdown_flag:
                     break
                 time.sleep(1)
