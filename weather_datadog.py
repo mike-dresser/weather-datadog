@@ -163,7 +163,7 @@ def main():
         
         # Wait 300 seconds before next iteration (unless shutdown requested)
         if not shutdown_flag:
-            logger.info("Waiting 15 seconds until next check...")
+            logger.info("Waiting 300 seconds until next check...")
             for _ in range(300):
                 if shutdown_flag:
                     break
