@@ -42,5 +42,26 @@ fi
 # Change to script directory
 cd "$SCRIPT_DIR"
 
+# Path to virtual environment
+VENV_DIR="${SCRIPT_DIR}/venv"
+
+# Check if virtual environment exists
+if [ ! -d "$VENV_DIR" ]; then
+    echo "Error: Virtual environment not found at $VENV_DIR"
+    echo "Please create it first with: python3 -m venv venv"
+    echo "Then install dependencies with: source venv/bin/activate && pip install -r requirements.txt"
+    exit 1
+fi
+
+# Activate virtual environment
+echo "Activating virtual environment..."
+source "${VENV_DIR}/bin/activate"
+
+# Verify virtual environment is activated
+if [ -z "$VIRTUAL_ENV" ]; then
+    echo "Error: Failed to activate virtual environment"
+    exit 1
+fi
+
 # Run the Python application
-python3 weather_datadog.py
+python weather_datadog.py
